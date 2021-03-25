@@ -46,6 +46,7 @@ public class LoginFilter implements Filter {
             // セッションスコープに保存された従業員(ログインユーザ)情報を取得
             Employee e = (Employee)session.getAttribute("login_employee");
 
+            //ログイン以外のページにアクセスした場合
             if(!servlet_path.equals("/login")) {
                 // ログアウトしている状態であれば
                 // ログイン画面にリダイレクト
