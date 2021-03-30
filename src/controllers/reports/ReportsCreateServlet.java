@@ -42,14 +42,15 @@ public class ReportsCreateServlet extends HttpServlet {
 
             Report r = new Report();
 
-            r.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
+            r.setEmployee((Employee)request.getSession().getAttribute("login_employee"));   //日報の情報を挿入する上で必要。
 
-            Date report_date = new Date(System.currentTimeMillis());
-            String rd_str = request.getParameter("report_date");
-            if(rd_str != null && !rd_str.equals("")) {
-                report_date = Date.valueOf(request.getParameter("report_date"));
+            Date report_date = new Date(System.currentTimeMillis());    //現在日時の情報を持つ日付型のオブジェクトを取得
+            String rd_str = request.getParameter("report_date");    //ブラウザ(new)送られてきた本日の日付を取得
+
+            if(rd_str != null && !rd_str.equals("")) {      //入力があったなら、ブラウザから送られてきた"report_date"を取得
+                report_date = Date.valueOf(request.getParameter("report_date"));    //(getParameterにより)Stringで受け取った日付を Date 型へ変換
             }
-            r.setReport_date(report_date);
+            r.setReport_date(report_date);  //rにセット ※if文が満たされない(無入力だった場合、現在日時の情報をセット)
 
             r.setTitle(request.getParameter("title"));
             r.setContent(request.getParameter("content"));
