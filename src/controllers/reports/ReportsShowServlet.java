@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Employee;
 import models.Report;
 import utils.DBUtil;
 
@@ -35,10 +36,17 @@ public class ReportsShowServlet extends HttpServlet {
 
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
+        Employee employee = (Employee)request.getSession().getAttribute("login_employee");
+
+        long first_like_check = (long)em.createNamedQuery("firstLikeCheck", Long.class)
+                .setParameter("report", r)
+                .setParameter("employee", employee)
+                .getSingleResult();
 
         em.close();
 
         request.setAttribute("report", r);
+        request.setAttribute("first_like_check", first_like_check);
         request.setAttribute("_token", request.getSession().getId());
         request.getSession().setAttribute("report_id", r.getId());  //[/like]に送る
 

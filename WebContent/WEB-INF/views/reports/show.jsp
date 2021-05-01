@@ -37,7 +37,18 @@
                         </tr>
                         <tr>
                             <th>いいね数</th>
-                            <td><c:out value="${report.like_count}" /></td>
+                            <c:choose>
+                                <c:when test="${report.like_count != 0 }">
+                                    <td>
+                                        <a href="<c:url value='/likes/index?id=${report.id}' />"><c:out value="${report.like_count}" /></a>
+                                    </td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td>
+                                        <c:out value="${report.like_count}" />
+                                    </td>
+                                </c:otherwise>
+                            </c:choose>
                         </tr>
                     </tbody>
                 </table>
@@ -45,11 +56,13 @@
                         <c:when test="${sessionScope.login_employee.id == report.employee.id}">
                             <p><a href="<c:url value='/reports/edit?id=${report.id}' />">この日報を編集する</a></p>
                         </c:when>
-                        <c:otherwise>
-                           <form method="POST" action="<c:url value='/reports/like' />">
+                        <c:when test="${first_like_check == 0}">
+                            <form method="POST" action="<c:url value='/reports/like' />">
                                <input type="hidden" name="_token" value="${_token}" />
                                <button type="submit">この日報にいいねする</button>
-                           </form>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
                         </c:otherwise>
                     </c:choose>
 

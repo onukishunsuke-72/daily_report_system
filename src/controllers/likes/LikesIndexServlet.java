@@ -1,4 +1,4 @@
-package controllers.reports;
+package controllers.likes;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,20 +11,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Like;
 import models.Report;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class ReportsIndexServlet
+ * Servlet implementation class LikesIndexServlet
  */
-@WebServlet("/reports/index")
-public class ReportsIndexServlet extends HttpServlet {
+@WebServlet("/likes/index")
+public class LikesIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReportsIndexServlet() {
+    public LikesIndexServlet() {
         super();
     }
 
@@ -34,31 +35,34 @@ public class ReportsIndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
 
+        int report_id = Integer.parseInt(request.getParameter("id"));
+        Report report = em.find(Report.class, report_id);
+
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page = 1;
         }
-        List<Report> reports = em.createNamedQuery("getAllReports", Report.class)
-                                  .setFirstResult(15 * (page-1))
-                                  .setMaxResults(15)
-                                  .getResultList();
 
-        long reports_count = (long)em.createNamedQuery("getReportsCount", Long.class)
-                                     .getSingleResult();
+        List<Like> likes = em.createNamedQuery("getThisReportLikes", Like.class)
+                .setParameter("report", report)
+                .setFirstResult(15 * (page-1))
+                .setMaxResults(15)
+                .getResultList();
+
+        long likes_count = (long)em.createNamedQuery("getThisReportLikesCount", Long.class)
+                   .setParameter("report", report)
+                   .getSingleResult();
 
         em.close();
 
-        request.setAttribute("reports", reports);
-        request.setAttribute("reports_count", reports_count);
+        request.setAttribute("likes", likes);
+        request.setAttribute("likes_count", likes_count);
         request.setAttribute("page", page);
-        if(request.getSession().getAttribute("flush") != null){
-            request.setAttribute("flush", request.getSession().getAttribute("flush"));
-            request.getSession().removeAttribute("flush");
-        }
+        request.setAttribute("report_id", report_id);
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/likes/index.jsp");
         rd.forward(request, response);
     }
 
