@@ -61,12 +61,16 @@ td {
     padding: 10px 2%;
 }
 
-button{
+button {
     font-size: 14px;
     padding: 5px 10px;
 }
+button#follow {
+    font-size: 12px;
+    padding: 3px 10px;
+}
 
-#footer{
+#footer {
     text-align: center;
 }
 
@@ -162,4 +166,8 @@ pre {
 }
 h3 {
     font-size: larger;
+}
+
+.name_follow {
+    display: inline-block;
 }

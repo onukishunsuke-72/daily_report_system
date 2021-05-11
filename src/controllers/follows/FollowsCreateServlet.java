@@ -1,4 +1,4 @@
-package controllers.reports;
+package controllers.follows;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -11,21 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Employee;
-import models.Like;
-import models.Report;
+import models.Follow;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class ReportsLikeServlet
+ * Servlet implementation class FollowsCreateServlet
  */
-@WebServlet("/reports/like")
-public class ReportsLikeServlet extends HttpServlet {
+@WebServlet("/follows/create")
+public class FollowsCreateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ReportsLikeServlet() {
+    public FollowsCreateServlet() {
         super();
     }
 
@@ -37,25 +36,21 @@ public class ReportsLikeServlet extends HttpServlet {
         if(_token != null && _token.equals(request.getSession().getId())){
             EntityManager em = DBUtil.createEntityManager();
 
-            Report r = em.find(Report.class, (Integer)request.getSession().getAttribute("report_id"));
-            Integer like_count = r.getLike_count();
-            like_count++;
-            r.setLike_count(like_count);
+            Follow f = new Follow();
+            f.setLogin_employee((Employee)request.getSession().getAttribute("login_employee"));
+            f.setFollow_employee((Employee)request.getSession().getAttribute("report_employee"));
 
-            Like l = new Like();
-            l.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
-            l.setReport(r);
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            l.setCreated_at(currentTime);
-            l.setUpdated_at(currentTime);
+            f.setCreated_at(currentTime);
+            f.setUpdated_at(currentTime);
 
             em.getTransaction().begin();
-            em.persist(l);
+            em.persist(f);
             em.getTransaction().commit();
             em.close();
 
-            request.getSession().setAttribute("flush", "いいねしました");
-            request.getSession().removeAttribute("report_id");
+            request.getSession().setAttribute("flush", "フォローしました。");
+            request.getSession().removeAttribute("report_employee");
 
             response.sendRedirect(request.getContextPath() + "/reports/index");
         }

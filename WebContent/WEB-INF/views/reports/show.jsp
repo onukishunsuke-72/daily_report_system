@@ -11,7 +11,17 @@
                     <tbody>
                         <tr>
                             <th>氏名</th>
-                            <td><c:out value="${report.employee.name}" /></td>
+                            <td>
+                                <div class="name_follow"><c:out value="${report.employee.name}" /></div>&nbsp;&nbsp;&nbsp;
+                                <div class="name_follow">
+                                    <c:if test="${sessionScope.login_employee.id != report.employee.id && follow_check == 0}">
+                                        <form method="POST" action="<c:url value='/follows/create' />">
+                                            <input type="hidden" name="_token" value="${_token}" />
+                                            <button id="follow" type="submit">フォローする</button>
+                                        </form>
+                                    </c:if>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <th>日付</th>
