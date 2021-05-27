@@ -39,6 +39,7 @@ public class ReportsShowServlet extends HttpServlet {
 
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
 
+
         long first_like_check = (long)em.createNamedQuery("firstLikeCheck", Long.class)
                                 .setParameter("report", r)
                                 .setParameter("employee", login_employee)
@@ -49,13 +50,14 @@ public class ReportsShowServlet extends HttpServlet {
                             .setParameter("follow_employee", report_employee)
                             .getSingleResult();
 
+
         em.close();
 
         request.setAttribute("report", r);
         request.setAttribute("first_like_check", first_like_check);
         request.setAttribute("follow_check", follow_check);
         request.setAttribute("_token", request.getSession().getId());
-        request.getSession().setAttribute("report_id", r.getId());  //[/reports/like]に送る
+        request.getSession().setAttribute("report_id", r.getId());  //[/reports/like][/reports/leave][/files/create]に送る
         request.getSession().setAttribute("report_employee", report_employee); //[/follows/create]に送る
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");

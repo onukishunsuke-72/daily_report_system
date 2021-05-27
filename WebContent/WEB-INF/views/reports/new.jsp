@@ -4,8 +4,10 @@
     <c:param name="content">
         <h2>日報 新規登録ページ</h2>
 
-        <form method="POST" action="<c:url value='/reports/create' />">
+        <form method="POST" action="<c:url value='/reports/create' />" >
             <c:import url="_form.jsp" />
+            <input type="hidden" name="_token" value="${_token}" />
+            <button type="submit">出勤</button>
         </form>
 
         <p><a href="<c:url value='/reports/index' />">一覧に戻る</a></p>

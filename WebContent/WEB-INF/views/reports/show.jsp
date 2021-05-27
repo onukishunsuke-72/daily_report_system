@@ -34,17 +34,30 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>登録日時</th>
+                            <th>出勤日時</th>
                             <td>
                                 <fmt:formatDate value="${report.created_at}" pattern="yyyy-MM-dd HH:mm:ss" />
                             </td>
                         </tr>
                         <tr>
-                            <th>更新日時</th>
+                            <th>退勤日時</th>
                             <td>
-                                <fmt:formatDate value="${report.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <c:choose>
+                                    <c:when test="${report.created_at != report.updated_at}">
+                                       <fmt:formatDate value="${report.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:if test="${sessionScope.login_employee.id == report.employee.id}">
+                                            <form method="POST" action="<c:url value='/reports/leave' />">
+                                               <input type="hidden" name="_token" value="${_token}" />
+                                               <button type="submit">退勤</button>
+                                            </form>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
+
                         <tr>
                             <th>いいね数</th>
                             <c:choose>
@@ -60,21 +73,25 @@
                                 </c:otherwise>
                             </c:choose>
                         </tr>
+
                     </tbody>
                 </table>
                     <c:choose>
                         <c:when test="${sessionScope.login_employee.id == report.employee.id}">
                             <p><a href="<c:url value='/reports/edit?id=${report.id}' />">この日報を編集する</a></p>
                         </c:when>
-                        <c:when test="${first_like_check == 0}">
-                            <form method="POST" action="<c:url value='/reports/like' />">
-                               <input type="hidden" name="_token" value="${_token}" />
-                               <button type="submit">この日報にいいねする</button>
-                            </form>
-                        </c:when>
                         <c:otherwise>
+                            <c:if test="${first_like_check == 0}">
+                                <form method="POST" action="<c:url value='/reports/like' />">
+                                   <input type="hidden" name="_token" value="${_token}" />
+                                   <button type="submit">この日報にいいねする</button>
+                                </form>
+                            </c:if>
                         </c:otherwise>
+
                     </c:choose>
+
+
 
             </c:when>
             <c:otherwise>

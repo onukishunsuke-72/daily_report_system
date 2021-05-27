@@ -2,7 +2,6 @@ package controllers.reports;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -44,7 +43,10 @@ public class ReportsUpdateServlet extends HttpServlet {
         r.setReport_date(Date.valueOf(request.getParameter("report_date")));
         r.setTitle(request.getParameter("title"));
         r.setContent(request.getParameter("content"));
+        /*
+         * updateは退勤用としてReportLeaveで更新
         r.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+        */
 
         List<String> errors = ReportValidator.validate(r);
         if(errors.size() > 0){

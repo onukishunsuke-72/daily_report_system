@@ -5,8 +5,10 @@
        <c:choose>
            <c:when test="${report != null}">
                <h2>日報編集ページ</h2>
-               <form method="POST" action="<c:url value='/reports/update' />">
+               <form method="POST" action="<c:url value='/reports/update' />" enctype="multipart/form-data">
                    <c:import url="_form.jsp" />
+                   <input type="hidden" name="_token" value="${_token}" />
+                   <button type="submit">投稿</button>
                </form>
            </c:when>
            <c:otherwise>
